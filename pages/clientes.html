@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - Fitness Nutricão</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- CABEÇALHO -->
+    <header>
+        <div class="container">
+            <h1>👥 Gestão de Clientes</h1>
+            <p>Cadastre e gerencie seus clientes</p>
+        </div>
+    </header>
+
+    <!-- MENU DE NAVEGAÇÃO -->
+    <nav>
+        <div class="container">
+            <a href="../index.html" class="btn-nav">🏠 Início</a>
+            <a href="clientes.html" class="btn-nav active">👥 Clientes</a>
+            <a href="avaliacoes.html" class="btn-nav">📊 Avaliações</a>
+            <a href="planos.html" class="btn-nav">📋 Planos</a>
+            <a href="consultas.html" class="btn-nav">📅 Consultas</a>
+            <a href="financeiro.html" class="btn-nav">💰 Financeiro</a>
+        </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="container">
+        <!-- FORMULÁRIO DE CADASTRO -->
+        <div class="form-box">
+            <h2>📝 Cadastrar Novo Cliente</h2>
+            <form id="formCliente">
+                <div class="form-group">
+                    <label for="nome">Nome Completo *</label>
+                    <input type="text" id="nome" required placeholder="Ex: João Silva">
+                </div>
+
+                <div class="form-group">
+                    <label for="cpf">CPF *</label>
+                    <input type="text" id="cpf" required placeholder="000.000.000-00" maxlength="14">
+                </div>
+
+                <div class="form-group">
+                    <label for="dataNascimento">Data de Nascimento *</label>
+                    <input type="date" id="dataNascimento" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefone">Telefone *</label>
+                    <input type="tel" id="telefone" required placeholder="(00) 00000-0000">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail *</label>
+                    <input type="email" id="email" required placeholder="exemplo@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo">Tipo de Plano *</label>
+                    <select id="tipo" required>
+                        <option value="">Selecione...</option>
+                        <option value="Normal">Normal</option>
+                        <option value="VIP">VIP</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataInicio">Data de Início *</label>
+                    <input type="date" id="dataInicio" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="observacoes">Observações</label>
+                    <textarea id="observacoes" placeholder="Informações adicionais sobre o cliente..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary">💾 Salvar Cliente</button>
+                <button type="button" class="btn-secondary" onclick="limparFormulario()">🔄 Limpar</button>
+            </form>
+        </div>
+
+        <!-- MENSAGEM DE SUCESSO/ERRO -->
+        <div id="mensagem" style="display: none;"></div>
+
+        <!-- LISTA DE CLIENTES -->
+        <div class="table-box">
+            <h2>📋 Lista de Clientes</h2>
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="buscarCliente" placeholder="🔍 Buscar cliente..." 
+                       style="padding: 10px; width: 100%; max-width: 400px; border: 2px solid #e0e0e0; border-radius: 8px;">
+            </div>
+            <table id="tabelaClientes">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Telefone</th>
+                        <th>E-mail</th>
+                        <th>Tipo</th>
+                        <th>Data Início</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="listaClientes">
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #999;">
+                            Nenhum cliente cadastrado ainda
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Vida Saudável - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+    <script>
+        // CARREGAR CLIENTES AO ABRIR A PÁGINA
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarClientes();
+            
+            // Auto-completar data de início com hoje
+            document.getElementById('dataInicio').valueAsDate = new Date();
+        });
+
+        // SALVAR CLIENTE
+        document.getElementById('formCliente').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const cliente = {
+                id: Date.now(),
+                nome: document.getElementById('nome').value,
+                cpf: document.getElementById('cpf').value,
+                dataNascimento: document.getElementById('dataNascimento').value,
+                telefone: document.getElementById('telefone').value,
+                email: document.getElementById('email').value,
+                tipo: document.getElementById('tipo').value,
+                dataInicio: document.getElementById('dataInicio').value,
+                observacoes: document.getElementById('observacoes').value,
+                dataCadastro: new Date().toISOString()
+            };
+            
+            // Buscar clientes existentes
+            let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+            
+            // Adicionar novo cliente
+            clientes.push(cliente);
+            
+            // Salvar no localStorage
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            
+            // Mostrar mensagem de sucesso
+            mostrarMensagem('Cliente cadastrado com sucesso! ✅', 'success');
+            
+            // Limpar formulário
+            limparFormulario();
+            
+            // Recarregar lista
+            carregarClientes();
+        });
+
+        // CARREGAR CLIENTES NA TABELA
+        function carregarClientes() {
+            const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+            const tbody = document.getElementById('listaClientes');
+            
+            if (clientes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">Nenhum cliente cadastrado ainda</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            clientes.forEach(cliente => {
+                const tr = document.createElement('tr');
+                
+                const badgeClass = cliente.tipo === 'VIP' ? 'badge-vip' : 'badge-normal';
+                
+                tr.innerHTML = `
+                    <td>${cliente.nome}</td>
+                    <td>${cliente.cpf}</td>
+                    <td>${cliente.telefone}</td>
+                    <td>${cliente.email}</td>
+                    <td><span class="badge ${badgeClass}">${cliente.tipo}</span></td>
+                    <td>${formatarData(cliente.dataInicio)}</td>
+                    <td>
+                        <button class="btn-primary" style="padding: 5px 10px; font-size: 0.9em; margin-right: 5px;" 
+                                onclick="verDetalhes(${cliente.id})">👁️ Ver</button>
+                        <button class="btn-danger" style="padding: 5px 10px; font-size: 0.9em;" 
+                                onclick="excluirCliente(${cliente.id})">🗑️ Excluir</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+        }
+
+        // BUSCAR CLIENTE
+        document.getElementById('buscarCliente').addEventListener('input', function(e) {
+            const termo = e.target.value.toLowerCase();
+            const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+            const clientesFiltrados = clientes.filter(c => 
+                c.nome.toLowerCase().includes(termo) ||
+                c.cpf.includes(termo) ||
+                c.email.toLowerCase().includes(termo)
+            );
+            
+            const tbody = document.getElementById('listaClientes');
+            tbody.innerHTML = '';
+            
+            if (clientesFiltrados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">Nenhum cliente encontrado</td></tr>';
+                return;
+            }
+            
+            clientesFiltrados.forEach(cliente => {
+                const tr = document.createElement('tr');
+                const badgeClass = cliente.tipo === 'VIP' ? 'badge-vip' : 'badge-normal';
+                
+                tr.innerHTML = `
+                    <td>${cliente.nome}</td>
+                    <td>${cliente.cpf}</td>
+                    <td>${cliente.telefone}</td>
+                    <td>${cliente.email}</td>
+                    <td><span class="badge ${badgeClass}">${cliente.tipo}</span></td>
+                    <td>${formatarData(cliente.dataInicio)}</td>
+                    <td>
+                        <button class="btn-primary" style="padding: 5px 10px; font-size: 0.9em; margin-right: 5px;" 
+                                onclick="verDetalhes(${cliente.id})">👁️ Ver</button>
+                        <button class="btn-danger" style="padding: 5px 10px; font-size: 0.9em;" 
+                                onclick="excluirCliente(${cliente.id})">🗑️ Excluir</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+        });
+
+        // EXCLUIR CLIENTE
+        function excluirCliente(id) {
+            if (confirm('Tem certeza que deseja excluir este cliente?')) {
+                let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+                clientes = clientes.filter(c => c.id !== id);
+                localStorage.setItem('clientes', JSON.stringify(clientes));
+                mostrarMensagem('Cliente excluído com sucesso!', 'success');
+                carregarClientes();
+            }
+        }
+
+        // VER DETALHES DO CLIENTE
+        function verDetalhes(id) {
+            const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+            const cliente = clientes.find(c => c.id === id);
+            
+            if (cliente) {
+                alert(`
+📋 DETALHES DO CLIENTE
+
+Nome: ${cliente.nome}
+CPF: ${cliente.cpf}
+Data Nascimento: ${formatarData(cliente.dataNascimento)}
+Telefone: ${cliente.telefone}
+E-mail: ${cliente.email}
+Tipo: ${cliente.tipo}
+Data Início: ${formatarData(cliente.dataInicio)}
+Observações: ${cliente.observacoes || 'Nenhuma'}
+                `);
+            }
+        }
+
+        // LIMPAR FORMULÁRIO
+        function limparFormulario() {
+            document.getElementById('formCliente').reset();
+            document.getElementById('dataInicio').valueAsDate = new Date();
+        }
+
+        // MOSTRAR MENSAGEM
+        function mostrarMensagem(texto, tipo) {
+            const div = document.getElementById('mensagem');
+            div.className = tipo === 'success' ? 'alert alert-success' : 'alert alert-danger';
+            div.textContent = texto;
+            div.style.display = 'block';
+            
+            setTimeout(() => {
+                div.style.display = 'none';
+            }, 3000);
+        }
+
+        // FORMATAR DATA
+        function formatarData(data) {
+            const d = new Date(data + 'T00:00:00');
+            return d.toLocaleDateString('pt-BR');
+        }
+    </script>
+</body>
+</html>
