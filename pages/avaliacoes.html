@@ -3,362 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avaliações Físicas - Fitness Nutricão</title>
-    <link rel="stylesheet" href="../style.css">
+    <title>Fitness Nutricão - Sistema de Gestão</title>
+    <!-- Link para o arquivo de estilos CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- CABEÇALHO -->
+    <!-- Cabeçalho principal do sistema -->
     <header>
         <div class="container">
-            <h1>📊 Avaliações Físicas</h1>
-            <p>Registre e acompanhe a evolução dos clientes</p>
+            <h1>🏋️ Fitness Nutricão</h1>
+            <p>Sistema de Gestão de Fitness e Nutrição</p>
         </div>
     </header>
 
-    <!-- MENU DE NAVEGAÇÃO -->
+    <!-- Menu de navegação entre páginas -->
     <nav>
         <div class="container">
-            <a href="../index.html" class="btn-nav">🏠 Início</a>
-            <a href="clientes.html" class="btn-nav">👥 Clientes</a>
-            <a href="avaliacoes.html" class="btn-nav active">📊 Avaliações</a>
-            <a href="planos.html" class="btn-nav">📋 Planos</a>
-            <a href="consultas.html" class="btn-nav">📅 Consultas</a>
-            <a href="financeiro.html" class="btn-nav">💰 Financeiro</a>
+            <!-- Link ativo (página atual) -->
+            <a href="index.html" class="btn-nav active">🏠 Início</a>
+            <!-- Links para outras páginas do sistema -->
+            <a href="pages/clientes.html" class="btn-nav">👥 Clientes</a>
+            <a href="pages/avaliacoes.html" class="btn-nav">📊 Avaliações</a>
+            <a href="pages/planos.html" class="btn-nav">📋 Planos</a>
+            <a href="pages/consultas.html" class="btn-nav">📅 Consultas</a>
+            <a href="pages/financeiro.html" class="btn-nav">💰 Financeiro</a>
         </div>
     </nav>
 
-    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- Área principal do conteúdo -->
     <main class="container">
-        <!-- FORMULÁRIO DE AVALIAÇÃO -->
-        <div class="form-box">
-            <h2>📝 Registrar Nova Avaliação</h2>
-            <form id="formAvaliacao">
-                <div class="form-group">
-                    <label for="clienteId">Selecione o Cliente *</label>
-                    <select id="clienteId" required>
-                        <option value="">Selecione um cliente...</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="peso">Peso (kg) *</label>
-                    <input type="number" id="peso" step="0.1" required placeholder="Ex: 75.5">
-                </div>
-
-                <div class="form-group">
-                    <label for="altura">Altura (cm) *</label>
-                    <input type="number" id="altura" step="0.1" required placeholder="Ex: 175">
-                </div>
-
-                <div class="form-group">
-                    <label for="imc">IMC (Calculado Automaticamente)</label>
-                    <input type="text" id="imc" readonly placeholder="Será calculado automaticamente" 
-                           style="background-color: #f0f0f0; cursor: not-allowed;">
-                </div>
-
-                <div class="form-group">
-                    <label for="classificacaoIMC">Classificação do IMC</label>
-                    <input type="text" id="classificacaoIMC" readonly placeholder="Será calculado automaticamente" 
-                           style="background-color: #f0f0f0; cursor: not-allowed;">
-                </div>
-
-                <div class="form-group">
-                    <label for="dataAvaliacao">Data da Avaliação *</label>
-                    <input type="date" id="dataAvaliacao" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="observacoes">Observações</label>
-                    <textarea id="observacoes" placeholder="Anotações sobre a avaliação, medidas, etc..."></textarea>
-                </div>
-
-                <button type="submit" class="btn-primary">💾 Salvar Avaliação</button>
-                <button type="button" class="btn-secondary" onclick="limparFormulario()">🔄 Limpar</button>
-            </form>
+        <!-- Caixa de boas-vindas -->
+        <div class="welcome-box">
+            <h2>Bem-vindo ao Sistema Fitness Nutricão! 👋</h2>
+            <p>Gerencie clientes, avaliações, planos de treino e nutrição em um só lugar.</p>
         </div>
 
-        <!-- MENSAGEM -->
-        <div id="mensagem" style="display: none;"></div>
-
-        <!-- LISTA DE AVALIAÇÕES -->
-        <div class="table-box">
-            <h2>📋 Histórico de Avaliações</h2>
-            <div style="margin-bottom: 15px;">
-                <select id="filtroCliente" style="padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; margin-right: 10px;">
-                    <option value="">📌 Todos os clientes</option>
-                </select>
-                <input type="text" id="buscarAvaliacao" placeholder="🔍 Buscar..." 
-                       style="padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px;">
+        <!-- Grade de cards para acesso rápido às funcionalidades -->
+        <div class="cards-grid">
+            <!-- Card: Clientes -->
+            <div class="card">
+                <div class="card-icon">👥</div>
+                <h3>Clientes</h3>
+                <p>Cadastre e gerencie seus clientes</p>
+                <a href="pages/clientes.html" class="btn-primary">Acessar</a>
             </div>
-            <table id="tabelaAvaliacoes">
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Data</th>
-                        <th>Peso (kg)</th>
-                        <th>Altura (cm)</th>
-                        <th>IMC</th>
-                        <th>Classificação</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="listaAvaliacoes">
-                    <tr>
-                        <td colspan="7" style="text-align: center; color: #999;">
-                            Nenhuma avaliação cadastrada ainda
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+            <!-- Card: Avaliações Físicas -->
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h3>Avaliações Físicas</h3>
+                <p>Registre peso, altura e IMC</p>
+                <a href="pages/avaliacoes.html" class="btn-primary">Acessar</a>
+            </div>
+
+            <!-- Card: Planos -->
+            <div class="card">
+                <div class="card-icon">📋</div>
+                <h3>Planos</h3>
+                <p>Crie planos de treino e nutrição</p>
+                <a href="pages/planos.html" class="btn-primary">Acessar</a>
+            </div>
+
+            <!-- Card: Consultas -->
+            <div class="card">
+                <div class="card-icon">📅</div>
+                <h3>Consultas</h3>
+                <p>Agende consultas com profissionais</p>
+                <a href="pages/consultas.html" class="btn-primary">Acessar</a>
+            </div>
+
+            <!-- Card: Financeiro -->
+            <div class="card">
+                <div class="card-icon">💰</div>
+                <h3>Financeiro</h3>
+                <p>Controle pagamentos e relatórios</p>
+                <a href="pages/financeiro.html" class="btn-primary">Acessar</a>
+            </div>
+
+            <!-- Card: Estatísticas -->
+            <div class="card card-stats">
+                <div class="card-icon">📈</div>
+                <h3>Estatísticas Rápidas</h3>
+                <div class="stats">
+                    <!-- Os números são atualizados pelo JavaScript -->
+                    <p><strong id="totalClientes">0</strong> Clientes</p>
+                    <p><strong id="totalVIP">0</strong> VIPs</p>
+                    <p><strong id="totalAvaliacoes">0</strong> Avaliações</p>
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- RODAPÉ -->
+    <!-- Rodapé da página -->
     <footer>
         <div class="container">
-            <p>&copy; 2024 Vida Saudável - Todos os direitos reservados</p>
+            <p>&copy; 2024 Fitness Nutricão</p>
         </div>
     </footer>
 
+    <!-- Script principal do sistema -->
+    <script src="script.js"></script>
+    
+    <!-- Script para carregar e exibir estatísticas -->
     <script>
-        // CARREGAR CLIENTES NO SELECT
+        // Espera a página carregar completamente antes de executar
         document.addEventListener('DOMContentLoaded', function() {
-            carregarClientesSelect();
-            carregarAvaliacoes();
-            
-            // Auto-completar data com hoje
-            document.getElementById('dataAvaliacao').valueAsDate = new Date();
-        });
-
-        function carregarClientesSelect() {
+            // Busca os dados salvos no navegador (localStorage)
             const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-            const selectCliente = document.getElementById('clienteId');
-            const filtroCliente = document.getElementById('filtroCliente');
-            
-            selectCliente.innerHTML = '<option value="">Selecione um cliente...</option>';
-            filtroCliente.innerHTML = '<option value="">📌 Todos os clientes</option>';
-            
-            clientes.forEach(cliente => {
-                const option1 = document.createElement('option');
-                option1.value = cliente.id;
-                option1.textContent = `${cliente.nome} - ${cliente.tipo}`;
-                selectCliente.appendChild(option1);
-                
-                const option2 = document.createElement('option');
-                option2.value = cliente.id;
-                option2.textContent = cliente.nome;
-                filtroCliente.appendChild(option2);
-            });
-        }
-
-        // CALCULAR IMC AUTOMATICAMENTE
-        document.getElementById('peso').addEventListener('input', calcularIMC);
-        document.getElementById('altura').addEventListener('input', calcularIMC);
-
-        function calcularIMC() {
-            const peso = parseFloat(document.getElementById('peso').value);
-            const alturaCm = parseFloat(document.getElementById('altura').value);
-            
-            if (peso && alturaCm) {
-                const alturaM = alturaCm / 100;
-                const imc = (peso / (alturaM * alturaM)).toFixed(2);
-                
-                document.getElementById('imc').value = imc;
-                document.getElementById('classificacaoIMC').value = classificarIMC(imc);
-            }
-        }
-
-        function classificarIMC(imc) {
-            if (imc < 18.5) return '⚠️ Abaixo do peso';
-            if (imc < 25) return '✅ Peso normal';
-            if (imc < 30) return '⚠️ Sobrepeso';
-            if (imc < 35) return '🔴 Obesidade Grau I';
-            if (imc < 40) return '🔴 Obesidade Grau II';
-            return '🔴 Obesidade Grau III';
-        }
-
-        // SALVAR AVALIAÇÃO
-        document.getElementById('formAvaliacao').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const clienteId = parseInt(document.getElementById('clienteId').value);
-            const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-            const cliente = clientes.find(c => c.id === clienteId);
-            
-            if (!cliente) {
-                mostrarMensagem('Cliente não encontrado!', 'danger');
-                return;
-            }
-            
-            const avaliacao = {
-                id: Date.now(),
-                clienteId: clienteId,
-                clienteNome: cliente.nome,
-                peso: parseFloat(document.getElementById('peso').value),
-                altura: parseFloat(document.getElementById('altura').value),
-                imc: parseFloat(document.getElementById('imc').value),
-                classificacao: document.getElementById('classificacaoIMC').value,
-                dataAvaliacao: document.getElementById('dataAvaliacao').value,
-                observacoes: document.getElementById('observacoes').value,
-                dataCadastro: new Date().toISOString()
-            };
-            
-            let avaliacoes = JSON.parse(localStorage.getItem('avaliacoes')) || [];
-            avaliacoes.push(avaliacao);
-            localStorage.setItem('avaliacoes', JSON.stringify(avaliacoes));
-            
-            mostrarMensagem('Avaliação registrada com sucesso! ✅', 'success');
-            limparFormulario();
-            carregarAvaliacoes();
-        });
-
-        // CARREGAR AVALIAÇÕES
-        function carregarAvaliacoes(filtroClienteId = null) {
-            let avaliacoes = JSON.parse(localStorage.getItem('avaliacoes')) || [];
-            const tbody = document.getElementById('listaAvaliacoes');
-            
-            if (filtroClienteId) {
-                avaliacoes = avaliacoes.filter(a => a.clienteId === parseInt(filtroClienteId));
-            }
-            
-            if (avaliacoes.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">Nenhuma avaliação encontrada</td></tr>';
-                return;
-            }
-            
-            // Ordenar por data (mais recente primeiro)
-            avaliacoes.sort((a, b) => new Date(b.dataAvaliacao) - new Date(a.dataAvaliacao));
-            
-            tbody.innerHTML = '';
-            
-            avaliacoes.forEach(avaliacao => {
-                const tr = document.createElement('tr');
-                
-                let badgeIMC = 'badge-success';
-                if (avaliacao.imc < 18.5 || avaliacao.imc >= 25) badgeIMC = 'badge-danger';
-                
-                tr.innerHTML = `
-                    <td>${avaliacao.clienteNome}</td>
-                    <td>${formatarData(avaliacao.dataAvaliacao)}</td>
-                    <td>${avaliacao.peso.toFixed(1)}</td>
-                    <td>${avaliacao.altura.toFixed(0)}</td>
-                    <td><strong>${avaliacao.imc.toFixed(2)}</strong></td>
-                    <td><span class="badge ${badgeIMC}">${avaliacao.classificacao}</span></td>
-                    <td>
-                        <button class="btn-primary" style="padding: 5px 10px; font-size: 0.9em; margin-right: 5px;" 
-                                onclick="verDetalhes(${avaliacao.id})">👁️ Ver</button>
-                        <button class="btn-danger" style="padding: 5px 10px; font-size: 0.9em;" 
-                                onclick="excluirAvaliacao(${avaliacao.id})">🗑️ Excluir</button>
-                    </td>
-                `;
-                
-                tbody.appendChild(tr);
-            });
-        }
-
-        // FILTRAR POR CLIENTE
-        document.getElementById('filtroCliente').addEventListener('change', function(e) {
-            const clienteId = e.target.value;
-            carregarAvaliacoes(clienteId || null);
-        });
-
-        // BUSCAR AVALIAÇÃO
-        document.getElementById('buscarAvaliacao').addEventListener('input', function(e) {
-            const termo = e.target.value.toLowerCase();
             const avaliacoes = JSON.parse(localStorage.getItem('avaliacoes')) || [];
-            const avaliacoesFiltradas = avaliacoes.filter(a => 
-                a.clienteNome.toLowerCase().includes(termo) ||
-                a.classificacao.toLowerCase().includes(termo)
-            );
             
-            const tbody = document.getElementById('listaAvaliacoes');
-            tbody.innerHTML = '';
+            // Calcula os totais
+            const totalClientes = clientes.length; // Conta todos os clientes
+            const totalVIP = clientes.filter(c => c.tipo === 'VIP').length; // Conta apenas clientes VIP
+            const totalAvaliacoes = avaliacoes.length; // Conta todas as avaliações
             
-            if (avaliacoesFiltradas.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">Nenhuma avaliação encontrada</td></tr>';
-                return;
-            }
-            
-            avaliacoesFiltradas.forEach(avaliacao => {
-                const tr = document.createElement('tr');
-                let badgeIMC = 'badge-success';
-                if (avaliacao.imc < 18.5 || avaliacao.imc >= 25) badgeIMC = 'badge-danger';
-                
-                tr.innerHTML = `
-                    <td>${avaliacao.clienteNome}</td>
-                    <td>${formatarData(avaliacao.dataAvaliacao)}</td>
-                    <td>${avaliacao.peso.toFixed(1)}</td>
-                    <td>${avaliacao.altura.toFixed(0)}</td>
-                    <td><strong>${avaliacao.imc.toFixed(2)}</strong></td>
-                    <td><span class="badge ${badgeIMC}">${avaliacao.classificacao}</span></td>
-                    <td>
-                        <button class="btn-primary" style="padding: 5px 10px; font-size: 0.9em; margin-right: 5px;" 
-                                onclick="verDetalhes(${avaliacao.id})">👁️ Ver</button>
-                        <button class="btn-danger" style="padding: 5px 10px; font-size: 0.9em;" 
-                                onclick="excluirAvaliacao(${avaliacao.id})">🗑️ Excluir</button>
-                    </td>
-                `;
-                
-                tbody.appendChild(tr);
-            });
+            // Atualiza os números na tela
+            document.getElementById('totalClientes').textContent = totalClientes;
+            document.getElementById('totalVIP').textContent = totalVIP;
+            document.getElementById('totalAvaliacoes').textContent = totalAvaliacoes;
         });
-
-        // EXCLUIR AVALIAÇÃO
-        function excluirAvaliacao(id) {
-            if (confirm('Tem certeza que deseja excluir esta avaliação?')) {
-                let avaliacoes = JSON.parse(localStorage.getItem('avaliacoes')) || [];
-                avaliacoes = avaliacoes.filter(a => a.id !== id);
-                localStorage.setItem('avaliacoes', JSON.stringify(avaliacoes));
-                mostrarMensagem('Avaliação excluída com sucesso!', 'success');
-                carregarAvaliacoes();
-            }
-        }
-
-        // VER DETALHES
-        function verDetalhes(id) {
-            const avaliacoes = JSON.parse(localStorage.getItem('avaliacoes')) || [];
-            const avaliacao = avaliacoes.find(a => a.id === id);
-            
-            if (avaliacao) {
-                alert(`
-📊 DETALHES DA AVALIAÇÃO
-
-Cliente: ${avaliacao.clienteNome}
-Data: ${formatarData(avaliacao.dataAvaliacao)}
-Peso: ${avaliacao.peso.toFixed(1)} kg
-Altura: ${avaliacao.altura.toFixed(0)} cm
-IMC: ${avaliacao.imc.toFixed(2)}
-Classificação: ${avaliacao.classificacao}
-Observações: ${avaliacao.observacoes || 'Nenhuma'}
-                `);
-            }
-        }
-
-        // LIMPAR FORMULÁRIO
-        function limparFormulario() {
-            document.getElementById('formAvaliacao').reset();
-            document.getElementById('imc').value = '';
-            document.getElementById('classificacaoIMC').value = '';
-            document.getElementById('dataAvaliacao').valueAsDate = new Date();
-        }
-
-        // MOSTRAR MENSAGEM
-        function mostrarMensagem(texto, tipo) {
-            const div = document.getElementById('mensagem');
-            div.className = tipo === 'success' ? 'alert alert-success' : 'alert alert-danger';
-            div.textContent = texto;
-            div.style.display = 'block';
-            
-            setTimeout(() => {
-                div.style.display = 'none';
-            }, 3000);
-        }
-
-        // FORMATAR DATA
-        function formatarData(data) {
-            const d = new Date(data + 'T00:00:00');
-            return d.toLocaleDateString('pt-BR');
-        }
     </script>
 </body>
 </html>

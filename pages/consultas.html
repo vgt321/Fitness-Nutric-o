@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultas -Fitness Nutricão</title>
+    <title>Consultas - Fitness Nutricão</title>
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -29,18 +29,21 @@
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="container">
-        <!-- FORMULÁRIO DE CONSULTA -->
+        <!-- FORMULÁRIO DE AGENDAMENTO -->
         <div class="form-box">
             <h2>📝 Agendar Nova Consulta</h2>
             <form id="formConsulta">
+                <!-- Selecionar cliente -->
                 <div class="form-group">
                     <label for="clienteId">Selecione o Cliente *</label>
                     <select id="clienteId" required>
                         <option value="">Selecione um cliente...</option>
                     </select>
+                    <!-- Mostra se cliente é VIP -->
                     <small id="clienteTipo" style="color: #666;"></small>
                 </div>
 
+                <!-- Tipo de profissional -->
                 <div class="form-group">
                     <label for="tipoProfissional">Tipo de Profissional *</label>
                     <select id="tipoProfissional" required>
@@ -51,6 +54,7 @@
                     </select>
                 </div>
 
+                <!-- Data e hora da consulta -->
                 <div class="form-group">
                     <label for="dataConsulta">Data da Consulta *</label>
                     <input type="date" id="dataConsulta" required>
@@ -61,6 +65,7 @@
                     <input type="time" id="horaConsulta" required>
                 </div>
 
+                <!-- Status da consulta -->
                 <div class="form-group">
                     <label for="status">Status *</label>
                     <select id="status" required>
@@ -72,6 +77,7 @@
                     </select>
                 </div>
 
+                <!-- Campos de texto -->
                 <div class="form-group">
                     <label for="observacoes">Observações</label>
                     <textarea id="observacoes" placeholder="Motivo da consulta, preparações necessárias, etc..."></textarea>
@@ -82,12 +88,13 @@
                     <textarea id="relatorioProgresso" placeholder="Feedback da consulta, resultados observados, recomendações..."></textarea>
                 </div>
 
+                <!-- Botões de ação -->
                 <button type="submit" class="btn-primary">💾 Salvar Consulta</button>
                 <button type="button" class="btn-secondary" onclick="limparFormulario()">🔄 Limpar</button>
             </form>
         </div>
 
-        <!-- MENSAGEM -->
+        <!-- MENSAGEM DE FEEDBACK -->
         <div id="mensagem" style="display: none;"></div>
 
         <!-- ALERTA VIP -->
@@ -98,10 +105,15 @@
         <!-- LISTA DE CONSULTAS -->
         <div class="table-box">
             <h2>📋 Consultas Agendadas</h2>
+            
+            <!-- Filtros -->
             <div style="margin-bottom: 15px;">
+                <!-- Filtrar por cliente -->
                 <select id="filtroCliente" style="padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; margin-right: 10px;">
                     <option value="">📌 Todos os clientes</option>
                 </select>
+                
+                <!-- Filtrar por status -->
                 <select id="filtroStatus" style="padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; margin-right: 10px;">
                     <option value="">📊 Todos os status</option>
                     <option value="Agendada">📅 Agendada</option>
@@ -110,6 +122,8 @@
                     <option value="Cancelada">❌ Cancelada</option>
                     <option value="Faltou">⚠️ Faltou</option>
                 </select>
+                
+                <!-- Filtrar por profissional -->
                 <select id="filtroProfissional" style="padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; margin-right: 10px;">
                     <option value="">👨‍⚕️ Todos os profissionais</option>
                     <option value="Personal Trainer">🏋️ Personal Trainer</option>
@@ -118,7 +132,7 @@
                 </select>
             </div>
 
-            <!-- SEPARAÇÃO: CLIENTES VIP PRIORITÁRIOS -->
+            <!-- TABELA: CONSULTAS VIP (PRIORITÁRIAS) -->
             <div id="consultasVIP" style="margin-bottom: 30px;">
                 <h3 style="color: #ffc107; border-bottom: 2px solid #ffc107; padding-bottom: 10px;">
                     ⭐ Consultas VIP (Atendimento Prioritário)
@@ -144,7 +158,7 @@
                 </table>
             </div>
 
-            <!-- CONSULTAS NORMAIS -->
+            <!-- TABELA: CONSULTAS REGULARES -->
             <div id="consultasNormais">
                 <h3 style="color: #6c757d; border-bottom: 2px solid #6c757d; padding-bottom: 10px;">
                     👤 Consultas Regulares
@@ -180,41 +194,45 @@
     </footer>
 
     <script>
-        // CARREGAR PÁGINA
+        // Quando a página carregar
         document.addEventListener('DOMContentLoaded', function() {
-            carregarClientesSelect();
-            carregarConsultas();
+            carregarClientesSelect(); // Carrega lista de clientes
+            carregarConsultas(); // Carrega consultas agendadas
             
-            // Auto-completar data com hoje
+            // Define data de hoje automaticamente
             const hoje = new Date();
             document.getElementById('dataConsulta').valueAsDate = hoje;
         });
 
-        // CARREGAR CLIENTES NO SELECT
+        // Carrega clientes nos selects (VIPs aparecem primeiro)
         function carregarClientesSelect() {
             const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
             const selectCliente = document.getElementById('clienteId');
             const filtroCliente = document.getElementById('filtroCliente');
             
+            // Limpa os selects
             selectCliente.innerHTML = '<option value="">Selecione um cliente...</option>';
             filtroCliente.innerHTML = '<option value="">📌 Todos os clientes</option>';
             
-            // Ordenar: VIPs primeiro
+            // Ordena: VIPs aparecem primeiro
             clientes.sort((a, b) => {
                 if (a.tipo === 'VIP' && b.tipo !== 'VIP') return -1;
                 if (a.tipo !== 'VIP' && b.tipo === 'VIP') return 1;
                 return 0;
             });
             
+            // Adiciona cada cliente
             clientes.forEach(cliente => {
                 const prefixo = cliente.tipo === 'VIP' ? '⭐ ' : '';
                 
+                // Opção para formulário
                 const option1 = document.createElement('option');
                 option1.value = cliente.id;
                 option1.textContent = `${prefixo}${cliente.nome} - ${cliente.tipo}`;
                 option1.dataset.tipo = cliente.tipo;
                 selectCliente.appendChild(option1);
                 
+                // Opção para filtro
                 const option2 = document.createElement('option');
                 option2.value = cliente.id;
                 option2.textContent = `${prefixo}${cliente.nome}`;
@@ -222,7 +240,7 @@
             });
         }
 
-        // MOSTRAR TIPO DO CLIENTE
+        // Mostra mensagem especial para clientes VIP
         document.getElementById('clienteId').addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
             const tipo = selectedOption.dataset.tipo;
@@ -240,10 +258,11 @@
             }
         });
 
-        // SALVAR CONSULTA
+        // Salva nova consulta
         document.getElementById('formConsulta').addEventListener('submit', function(e) {
-            e.preventDefault();
+            e.preventDefault(); // Evita recarregar página
             
+            // Busca dados do cliente
             const clienteId = parseInt(document.getElementById('clienteId').value);
             const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
             const cliente = clientes.find(c => c.id === clienteId);
@@ -253,6 +272,7 @@
                 return;
             }
             
+            // Cria objeto da consulta
             const consulta = {
                 id: Date.now(),
                 clienteId: clienteId,
@@ -267,21 +287,23 @@
                 dataCadastro: new Date().toISOString()
             };
             
+            // Salva no localStorage
             let consultas = JSON.parse(localStorage.getItem('consultas')) || [];
             consultas.push(consulta);
             localStorage.setItem('consultas', JSON.stringify(consultas));
             
+            // Mensagem especial para VIP
             const msgTipo = cliente.tipo === 'VIP' ? '⭐ Consulta VIP agendada com prioridade!' : 'Consulta agendada com sucesso!';
             mostrarMensagem(msgTipo + ' ✅', 'success');
             limparFormulario();
             carregarConsultas();
         });
 
-        // CARREGAR CONSULTAS
+        // Carrega e exibe consultas (separadas: VIP e Normais)
         function carregarConsultas(filtroClienteId = null, filtroStatusVal = null, filtroProfissionalVal = null) {
             let consultas = JSON.parse(localStorage.getItem('consultas')) || [];
             
-            // Aplicar filtros
+            // Aplica filtros se existirem
             if (filtroClienteId) {
                 consultas = consultas.filter(c => c.clienteId === parseInt(filtroClienteId));
             }
@@ -292,11 +314,11 @@
                 consultas = consultas.filter(c => c.tipoProfissional === filtroProfissionalVal);
             }
             
-            // Separar VIP e Normais
+            // Separa consultas VIP das normais
             const consultasVIP = consultas.filter(c => c.clienteTipo === 'VIP');
             const consultasNormais = consultas.filter(c => c.clienteTipo !== 'VIP');
             
-            // Ordenar por data e hora
+            // Ordena por data e hora
             const ordenar = (a, b) => {
                 const dataHoraA = new Date(a.dataConsulta + 'T' + a.horaConsulta);
                 const dataHoraB = new Date(b.dataConsulta + 'T' + b.horaConsulta);
@@ -306,16 +328,16 @@
             consultasVIP.sort(ordenar);
             consultasNormais.sort(ordenar);
             
-            // Renderizar VIP
+            // Renderiza tabelas separadas
             renderizarConsultas(consultasVIP, 'listaConsultasVIP', true);
-            
-            // Renderizar Normais
             renderizarConsultas(consultasNormais, 'listaConsultasNormais', false);
         }
 
+        // Renderiza linhas da tabela de consultas
         function renderizarConsultas(consultas, tbodyId, isVIP) {
             const tbody = document.getElementById(tbodyId);
             
+            // Se não houver consultas
             if (consultas.length === 0) {
                 const mensagem = isVIP ? 'Nenhuma consulta VIP agendada' : 'Nenhuma consulta regular agendada';
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #999;">${mensagem}</td></tr>`;
@@ -324,14 +346,16 @@
             
             tbody.innerHTML = '';
             
+            // Cria linha para cada consulta
             consultas.forEach(consulta => {
                 const tr = document.createElement('tr');
                 
+                // Define cor do badge de status
                 let badgeStatus = 'badge-success';
                 if (consulta.status === 'Agendada') badgeStatus = 'badge-normal';
                 if (consulta.status === 'Cancelada' || consulta.status === 'Faltou') badgeStatus = 'badge-danger';
                 
-                // Destacar se for VIP
+                // Destaca linha se for VIP (fundo amarelo claro)
                 const rowStyle = isVIP ? 'background-color: #fff9e6;' : '';
                 
                 tr.style = rowStyle;
@@ -355,11 +379,12 @@
             });
         }
 
-        // FILTROS
+        // Adiciona eventos aos filtros
         document.getElementById('filtroCliente').addEventListener('change', aplicarFiltros);
         document.getElementById('filtroStatus').addEventListener('change', aplicarFiltros);
         document.getElementById('filtroProfissional').addEventListener('change', aplicarFiltros);
 
+        // Aplica todos os filtros selecionados
         function aplicarFiltros() {
             const clienteId = document.getElementById('filtroCliente').value;
             const status = document.getElementById('filtroStatus').value;
@@ -367,7 +392,7 @@
             carregarConsultas(clienteId || null, status || null, profissional || null);
         }
 
-        // ADICIONAR RELATÓRIO DE PROGRESSO
+        // Adiciona ou edita relatório de progresso
         function adicionarRelatorio(id) {
             let consultas = JSON.parse(localStorage.getItem('consultas')) || [];
             const consulta = consultas.find(c => c.id === id);
@@ -377,12 +402,14 @@
                 return;
             }
             
+            // Pede novo relatório via prompt
             const relatorio = prompt('📝 Digite o relatório de progresso da consulta:', consulta.relatorioProgresso || '');
             
             if (relatorio !== null) {
                 consulta.relatorioProgresso = relatorio;
-                consulta.status = 'Realizada';
+                consulta.status = 'Realizada'; // Marca como realizada
                 
+                // Salva alterações
                 consultas = consultas.map(c => c.id === id ? consulta : c);
                 localStorage.setItem('consultas', JSON.stringify(consultas));
                 
@@ -391,7 +418,7 @@
             }
         }
 
-        // EXCLUIR CONSULTA
+        // Exclui consulta
         function excluirConsulta(id) {
             if (confirm('Tem certeza que deseja excluir esta consulta?')) {
                 let consultas = JSON.parse(localStorage.getItem('consultas')) || [];
@@ -402,7 +429,7 @@
             }
         }
 
-        // VER DETALHES
+        // Mostra detalhes completos da consulta
         function verDetalhes(id) {
             const consultas = JSON.parse(localStorage.getItem('consultas')) || [];
             const consulta = consultas.find(c => c.id === id);
@@ -426,26 +453,27 @@ ${consulta.relatorioProgresso || 'Relatório ainda não preenchido'}
             }
         }
 
-        // LIMPAR FORMULÁRIO
+        // Limpa todos os campos do formulário
         function limparFormulario() {
             document.getElementById('formConsulta').reset();
             document.getElementById('clienteTipo').innerHTML = '';
             document.getElementById('dataConsulta').valueAsDate = new Date();
         }
 
-        // MOSTRAR MENSAGEM
+        // Exibe mensagem temporária de sucesso/erro
         function mostrarMensagem(texto, tipo) {
             const div = document.getElementById('mensagem');
             div.className = tipo === 'success' ? 'alert alert-success' : 'alert alert-danger';
             div.textContent = texto;
             div.style.display = 'block';
             
+            // Esconde após 3 segundos
             setTimeout(() => {
                 div.style.display = 'none';
             }, 3000);
         }
 
-        // FORMATAR DATA
+        // Converte data para formato brasileiro
         function formatarData(data) {
             const d = new Date(data + 'T00:00:00');
             return d.toLocaleDateString('pt-BR');

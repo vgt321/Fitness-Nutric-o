@@ -10,7 +10,7 @@
     <!-- CABEÇALHO -->
     <header>
         <div class="container">
-            <h1> Fitness Nutricão</h1>
+            <h1>🏋️ Fitness Nutricão</h1>
             <p>Sistema de Gestão de Fitness e Nutrição</p>
         </div>
     </header>
@@ -18,6 +18,7 @@
     <!-- MENU DE NAVEGAÇÃO -->
     <nav>
         <div class="container">
+            <!-- Links para as páginas do sistema -->
             <a href="index.html" class="btn-nav active">🏠 Início</a>
             <a href="pages/clientes.html" class="btn-nav">👥 Clientes</a>
             <a href="pages/avaliacoes.html" class="btn-nav">📊 Avaliações</a>
@@ -29,6 +30,7 @@
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="container">
+        <!-- Mensagem de boas-vindas -->
         <div class="welcome-box">
             <h2>Bem-vindo ao Sistema Fitness Nutricão! 👋</h2>
             <p>Gerencie clientes, avaliações, planos de treino e nutrição em um só lugar.</p>
@@ -36,6 +38,7 @@
 
         <!-- CARDS DE ATALHOS -->
         <div class="cards-grid">
+            <!-- Card Clientes -->
             <div class="card">
                 <div class="card-icon">👥</div>
                 <h3>Clientes</h3>
@@ -43,6 +46,7 @@
                 <a href="pages/clientes.html" class="btn-primary">Acessar</a>
             </div>
 
+            <!-- Card Avaliações -->
             <div class="card">
                 <div class="card-icon">📊</div>
                 <h3>Avaliações Físicas</h3>
@@ -50,6 +54,7 @@
                 <a href="pages/avaliacoes.html" class="btn-primary">Acessar</a>
             </div>
 
+            <!-- Card Planos -->
             <div class="card">
                 <div class="card-icon">📋</div>
                 <h3>Planos</h3>
@@ -57,6 +62,7 @@
                 <a href="pages/planos.html" class="btn-primary">Acessar</a>
             </div>
 
+            <!-- Card Consultas -->
             <div class="card">
                 <div class="card-icon">📅</div>
                 <h3>Consultas</h3>
@@ -64,6 +70,7 @@
                 <a href="pages/consultas.html" class="btn-primary">Acessar</a>
             </div>
 
+            <!-- Card Financeiro -->
             <div class="card">
                 <div class="card-icon">💰</div>
                 <h3>Financeiro</h3>
@@ -71,10 +78,12 @@
                 <a href="pages/financeiro.html" class="btn-primary">Acessar</a>
             </div>
 
+            <!-- Card Estatísticas -->
             <div class="card card-stats">
                 <div class="card-icon">📈</div>
                 <h3>Estatísticas Rápidas</h3>
                 <div class="stats">
+                    <!-- Os números são atualizados pelo JavaScript -->
                     <p><strong id="totalClientes">0</strong> Clientes</p>
                     <p><strong id="totalVIP">0</strong> VIPs</p>
                     <p><strong id="totalAvaliacoes">0</strong> Avaliações</p>
@@ -86,21 +95,25 @@
     <!-- RODAPÉ -->
     <footer>
         <div class="container">
-            <p>&copy; </p>
+            <p>&copy; 2024 Fitness Nutrição</p>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="script.js"></script>
     <script>
-        // Atualizar estatísticas na página inicial
+        // Atualizar estatísticas quando a página carregar
         document.addEventListener('DOMContentLoaded', function() {
+            // Pega os dados salvos do navegador
             const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
             const avaliacoes = JSON.parse(localStorage.getItem('avaliacoes')) || [];
             
+            // Conta totais
             const totalClientes = clientes.length;
             const totalVIP = clientes.filter(c => c.tipo === 'VIP').length;
             const totalAvaliacoes = avaliacoes.length;
             
+            // Atualiza os números na tela
             document.getElementById('totalClientes').textContent = totalClientes;
             document.getElementById('totalVIP').textContent = totalVIP;
             document.getElementById('totalAvaliacoes').textContent = totalAvaliacoes;

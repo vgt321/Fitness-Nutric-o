@@ -29,8 +29,9 @@
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="container">
-        <!-- RELATÓRIOS RESUMIDOS -->
+        <!-- CARDS DE RESUMO FINANCEIRO -->
         <div class="cards-grid" style="margin-bottom: 30px;">
+            <!-- Card: Total recebido no mês -->
             <div class="card">
                 <div class="card-icon">💵</div>
                 <h3>Total Recebido (Mês)</h3>
@@ -40,6 +41,7 @@
                 <p style="color: #666; font-size: 0.9em;">Pagamentos confirmados</p>
             </div>
 
+            <!-- Card: Total pendente -->
             <div class="card">
                 <div class="card-icon">⏳</div>
                 <h3>Total Pendente</h3>
@@ -49,6 +51,7 @@
                 <p style="color: #666; font-size: 0.9em;">Aguardando pagamento</p>
             </div>
 
+            <!-- Card: Total atrasado -->
             <div class="card">
                 <div class="card-icon">🚨</div>
                 <h3>Total Atrasado</h3>
@@ -58,6 +61,7 @@
                 <p style="color: #666; font-size: 0.9em;">Pagamentos vencidos</p>
             </div>
 
+            <!-- Card: Estatísticas gerais -->
             <div class="card card-stats">
                 <div class="card-icon">📊</div>
                 <h3>Estatísticas</h3>
@@ -69,10 +73,11 @@
             </div>
         </div>
 
-        <!-- FORMULÁRIO DE PAGAMENTO -->
+        <!-- FORMULÁRIO DE REGISTRO DE PAGAMENTO -->
         <div class="form-box">
             <h2>💳 Registrar Pagamento</h2>
             <form id="formPagamento">
+                <!-- Selecionar cliente -->
                 <div class="form-group">
                     <label for="clienteId">Selecione o Cliente *</label>
                     <select id="clienteId" required>
@@ -80,6 +85,7 @@
                     </select>
                 </div>
 
+                <!-- Tipo de serviço -->
                 <div class="form-group">
                     <label for="tipoServico">Tipo de Serviço *</label>
                     <select id="tipoServico" required>
@@ -93,11 +99,13 @@
                     </select>
                 </div>
 
+                <!-- Valor do pagamento -->
                 <div class="form-group">
                     <label for="valorPagamento">Valor (R$) *</label>
                     <input type="number" id="valorPagamento" step="0.01" required placeholder="Ex: 150.00">
                 </div>
 
+                <!-- Datas -->
                 <div class="form-group">
                     <label for="dataPagamento">Data do Pagamento *</label>
                     <input type="date" id="dataPagamento" required>
@@ -108,6 +116,7 @@
                     <input type="date" id="dataVencimento">
                 </div>
 
+                <!-- Método de pagamento -->
                 <div class="form-group">
                     <label for="metodoPagamento">Método de Pagamento *</label>
                     <select id="metodoPagamento" required>
@@ -121,6 +130,7 @@
                     </select>
                 </div>
 
+                <!-- Status do pagamento -->
                 <div class="form-group">
                     <label for="statusPagamento">Status do Pagamento *</label>
                     <select id="statusPagamento" required>
@@ -130,20 +140,22 @@
                     </select>
                 </div>
 
+                <!-- Observações -->
                 <div class="form-group">
                     <label for="observacoes">Observações</label>
                     <textarea id="observacoes" placeholder="Informações adicionais sobre o pagamento..."></textarea>
                 </div>
 
+                <!-- Botões de ação -->
                 <button type="submit" class="btn-primary">💾 Salvar Pagamento</button>
                 <button type="button" class="btn-secondary" onclick="limparFormulario()">🔄 Limpar</button>
             </form>
         </div>
 
-        <!-- MENSAGEM -->
+        <!-- MENSAGEM DE FEEDBACK -->
         <div id="mensagem" style="display: none;"></div>
 
-        <!-- RELATÓRIO FINANCEIRO POR SERVIÇO -->
+        <!-- TABELA: RECEITA POR TIPO DE SERVIÇO -->
         <div class="table-box" style="margin-bottom: 30px;">
             <h2>📊 Receita por Tipo de Serviço</h2>
             <table id="tabelaReceita">
@@ -165,23 +177,32 @@
             </table>
         </div>
 
-        <!-- LISTA DE PAGAMENTOS -->
+        <!-- TABELA: HISTÓRICO DE PAGAMENTOS -->
         <div class="table-box">
             <h2>📋 Histórico de Pagamentos</h2>
+            
+            <!-- Filtros -->
             <div style="margin-bottom: 15px;">
+                <!-- Filtrar por cliente -->
                 <select id="filtroCliente" style="padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; margin-right: 10px;">
                     <option value="">📌 Todos os clientes</option>
                 </select>
+                
+                <!-- Filtrar por status -->
                 <select id="filtroStatus" style="padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; margin-right: 10px;">
                     <option value="">💳 Todos os status</option>
                     <option value="Pago">✅ Pago</option>
                     <option value="Pendente">⏳ Pendente</option>
                     <option value="Atrasado">🚨 Atrasado</option>
                 </select>
+                
+                <!-- Filtrar por serviço -->
                 <select id="filtroServico" style="padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; margin-right: 10px;">
                     <option value="">🏷️ Todos os serviços</option>
                 </select>
             </div>
+            
+            <!-- Tabela de pagamentos -->
             <table id="tabelaPagamentos">
                 <thead>
                     <tr>
@@ -213,26 +234,28 @@
     </footer>
 
     <script>
-        // CARREGAR PÁGINA
+        // Quando a página carregar
         document.addEventListener('DOMContentLoaded', function() {
-            carregarClientesSelect();
-            carregarPagamentos();
-            calcularResumo();
-            gerarRelatorioReceita();
+            carregarClientesSelect(); // Carrega lista de clientes
+            carregarPagamentos(); // Carrega pagamentos
+            calcularResumo(); // Calcula totais dos cards
+            gerarRelatorioReceita(); // Gera relatório por serviço
             
-            // Auto-completar data com hoje
+            // Define data de hoje automaticamente
             document.getElementById('dataPagamento').valueAsDate = new Date();
         });
 
-        // CARREGAR CLIENTES NO SELECT
+        // Carrega clientes nos selects
         function carregarClientesSelect() {
             const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
             const selectCliente = document.getElementById('clienteId');
             const filtroCliente = document.getElementById('filtroCliente');
             
+            // Limpa os selects
             selectCliente.innerHTML = '<option value="">Selecione um cliente...</option>';
             filtroCliente.innerHTML = '<option value="">📌 Todos os clientes</option>';
             
+            // Adiciona cada cliente
             clientes.forEach(cliente => {
                 const option1 = document.createElement('option');
                 option1.value = cliente.id;
@@ -246,9 +269,10 @@
             });
         }
 
-        // CARREGAR SERVIÇOS NO FILTRO
+        // Carrega serviços únicos no filtro
         function carregarServicos() {
             const pagamentos = JSON.parse(localStorage.getItem('pagamentos')) || [];
+            // Pega apenas serviços únicos
             const servicos = [...new Set(pagamentos.map(p => p.tipoServico))];
             const filtroServico = document.getElementById('filtroServico');
             
@@ -261,10 +285,11 @@
             });
         }
 
-        // SALVAR PAGAMENTO
+        // Salva novo pagamento
         document.getElementById('formPagamento').addEventListener('submit', function(e) {
-            e.preventDefault();
+            e.preventDefault(); // Evita recarregar página
             
+            // Busca dados do cliente
             const clienteId = parseInt(document.getElementById('clienteId').value);
             const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
             const cliente = clientes.find(c => c.id === clienteId);
@@ -274,6 +299,7 @@
                 return;
             }
             
+            // Cria objeto do pagamento
             const pagamento = {
                 id: Date.now(),
                 clienteId: clienteId,
@@ -289,6 +315,7 @@
                 dataCadastro: new Date().toISOString()
             };
             
+            // Salva no localStorage
             let pagamentos = JSON.parse(localStorage.getItem('pagamentos')) || [];
             pagamentos.push(pagamento);
             localStorage.setItem('pagamentos', JSON.stringify(pagamentos));
@@ -301,7 +328,7 @@
             carregarServicos();
         });
 
-        // CALCULAR RESUMO
+        // Calcula resumo financeiro dos cards
         function calcularResumo() {
             const pagamentos = JSON.parse(localStorage.getItem('pagamentos')) || [];
             const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
@@ -310,12 +337,13 @@
             const mesAtual = hoje.getMonth();
             const anoAtual = hoje.getFullYear();
             
-            // Filtrar pagamentos do mês atual
+            // Filtra pagamentos do mês atual
             const pagamentosMes = pagamentos.filter(p => {
                 const data = new Date(p.dataPagamento);
                 return data.getMonth() === mesAtual && data.getFullYear() === anoAtual;
             });
             
+            // Soma totais por status
             const totalRecebido = pagamentosMes
                 .filter(p => p.statusPagamento === 'Pago')
                 .reduce((sum, p) => sum + p.valorPagamento, 0);
@@ -328,16 +356,18 @@
                 .filter(p => p.statusPagamento === 'Atrasado')
                 .reduce((sum, p) => sum + p.valorPagamento, 0);
             
+            // Atualiza valores na tela
             document.getElementById('totalRecebido').textContent = totalRecebido.toFixed(2).replace('.', ',');
             document.getElementById('totalPendente').textContent = totalPendente.toFixed(2).replace('.', ',');
             document.getElementById('totalAtrasado').textContent = totalAtrasado.toFixed(2).replace('.', ',');
             
+            // Atualiza estatísticas
             document.getElementById('totalPagamentos').textContent = pagamentos.length;
             document.getElementById('clientesAtivos').textContent = clientes.length;
             document.getElementById('clientesVIP').textContent = clientes.filter(c => c.tipo === 'VIP').length;
         }
 
-        // GERAR RELATÓRIO DE RECEITA POR SERVIÇO
+        // Gera relatório de receita agrupada por tipo de serviço
         function gerarRelatorioReceita() {
             const pagamentos = JSON.parse(localStorage.getItem('pagamentos')) || [];
             const pagamentosPagos = pagamentos.filter(p => p.statusPagamento === 'Pago');
@@ -345,6 +375,7 @@
             const receitaPorServico = {};
             let totalGeral = 0;
             
+            // Agrupa receitas por serviço
             pagamentosPagos.forEach(p => {
                 if (!receitaPorServico[p.tipoServico]) {
                     receitaPorServico[p.tipoServico] = {
@@ -366,6 +397,7 @@
             
             tbody.innerHTML = '';
             
+            // Cria linha para cada tipo de serviço
             Object.keys(receitaPorServico).forEach(servico => {
                 const dados = receitaPorServico[servico];
                 const percentual = ((dados.total / totalGeral) * 100).toFixed(1);
@@ -380,7 +412,7 @@
                 tbody.appendChild(tr);
             });
             
-            // Adicionar linha de total
+            // Adiciona linha de total geral
             const trTotal = document.createElement('tr');
             trTotal.style.backgroundColor = '#f0f0f0';
             trTotal.style.fontWeight = 'bold';
@@ -393,11 +425,11 @@
             tbody.appendChild(trTotal);
         }
 
-        // CARREGAR PAGAMENTOS
+        // Carrega e exibe pagamentos na tabela
         function carregarPagamentos(filtroClienteId = null, filtroStatusVal = null, filtroServicoVal = null) {
             let pagamentos = JSON.parse(localStorage.getItem('pagamentos')) || [];
             
-            // Aplicar filtros
+            // Aplica filtros se existirem
             if (filtroClienteId) {
                 pagamentos = pagamentos.filter(p => p.clienteId === parseInt(filtroClienteId));
             }
@@ -415,14 +447,16 @@
                 return;
             }
             
-            // Ordenar por data (mais recente primeiro)
+            // Ordena por data (mais recente primeiro)
             pagamentos.sort((a, b) => new Date(b.dataPagamento) - new Date(a.dataPagamento));
             
             tbody.innerHTML = '';
             
+            // Cria linha para cada pagamento
             pagamentos.forEach(pagamento => {
                 const tr = document.createElement('tr');
                 
+                // Define cor do badge de status
                 let badgeStatus = 'badge-success';
                 if (pagamento.statusPagamento === 'Pendente') badgeStatus = 'badge-normal';
                 if (pagamento.statusPagamento === 'Atrasado') badgeStatus = 'badge-danger';
@@ -448,11 +482,12 @@
             carregarServicos();
         }
 
-        // FILTROS
+        // Adiciona eventos aos filtros
         document.getElementById('filtroCliente').addEventListener('change', aplicarFiltros);
         document.getElementById('filtroStatus').addEventListener('change', aplicarFiltros);
         document.getElementById('filtroServico').addEventListener('change', aplicarFiltros);
 
+        // Aplica todos os filtros selecionados
         function aplicarFiltros() {
             const clienteId = document.getElementById('filtroCliente').value;
             const status = document.getElementById('filtroStatus').value;
@@ -460,7 +495,7 @@
             carregarPagamentos(clienteId || null, status || null, servico || null);
         }
 
-        // EXCLUIR PAGAMENTO
+        // Exclui pagamento
         function excluirPagamento(id) {
             if (confirm('Tem certeza que deseja excluir este pagamento?')) {
                 let pagamentos = JSON.parse(localStorage.getItem('pagamentos')) || [];
@@ -473,7 +508,7 @@
             }
         }
 
-        // VER DETALHES
+        // Mostra detalhes completos do pagamento
         function verDetalhes(id) {
             const pagamentos = JSON.parse(localStorage.getItem('pagamentos')) || [];
             const pagamento = pagamentos.find(p => p.id === id);
@@ -495,25 +530,26 @@ Status: ${pagamento.statusPagamento}
             }
         }
 
-        // LIMPAR FORMULÁRIO
+        // Limpa todos os campos do formulário
         function limparFormulario() {
             document.getElementById('formPagamento').reset();
             document.getElementById('dataPagamento').valueAsDate = new Date();
         }
 
-        // MOSTRAR MENSAGEM
+        // Exibe mensagem temporária de sucesso/erro
         function mostrarMensagem(texto, tipo) {
             const div = document.getElementById('mensagem');
             div.className = tipo === 'success' ? 'alert alert-success' : 'alert alert-danger';
             div.textContent = texto;
             div.style.display = 'block';
             
+            // Esconde após 3 segundos
             setTimeout(() => {
                 div.style.display = 'none';
             }, 3000);
         }
 
-        // FORMATAR DATA
+        // Converte data para formato brasileiro
         function formatarData(data) {
             const d = new Date(data + 'T00:00:00');
             return d.toLocaleDateString('pt-BR');
