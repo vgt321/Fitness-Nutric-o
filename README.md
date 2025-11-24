@@ -1,4 +1,4 @@
-rabalho Fitness e Nutriçao
+trabalho Fitness e Nutriçao
 
 Professor/Mestre: Samuel Vinicios Pereira de Oliveira
 
