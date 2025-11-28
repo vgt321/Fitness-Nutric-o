@@ -1,4 +1,4 @@
-trabalho Fitness e Nutriçao
+# Trabalho Fitness e Nutriçao
 
 Professor/Mestre: Samuel Vinicios Pereira de Oliveira
 
@@ -8,9 +8,11 @@ integrantes:
 
 Isac Araujo Albuquerque ( isac.albuquerque@somosicev.com );
 
-Mardson Varela Lima (Mardson.lima@somosicev.com );
+Mardson Varela Lima (mardson.lima@somosicev.com );
 
-Vyctor Gabriel Machado Tôrres ( Vyctor.gabriel@somosicev.com )
+Vyctor Gabriel Machado Tôrres ( vyctor.gabriel@somosicev.com )
+
+José Roberto de Araújo Sousa ( Jose_roberto.sousa@somosicev.com )
 
 link do Repositorio: [https://github.com/PiedroCraft1379/Trabalho_Escalonador_com_Listas_de_Prioridade](https://github.com/vgt321/Fitness-Nutric-o)
 
