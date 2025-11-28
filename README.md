@@ -12,7 +12,7 @@ Mardson Varela Lima (mardson.lima@somosicev.com );
 
 Vyctor Gabriel Machado Tôrres ( vyctor.gabriel@somosicev.com )
 
-José Roberto de Araújo Sousa ( Jose_roberto.sousa@somosicev.com )
+José Roberto de Araújo Sousa ( jose_roberto.sousa@somosicev.com )
 
 link do Repositorio: [https://github.com/PiedroCraft1379/Trabalho_Escalonador_com_Listas_de_Prioridade](https://github.com/vgt321/Fitness-Nutric-o)
 
